@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        .klasa {
+            color: red
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main"></div>
+    <script type="text/babel">
+
+        class MyForm extends React.Component {
+
+            constructor(props) {
+                super(props);
+                this.state = {
+                    data: '',
+                    status: "niewysłane"
+                };
+            }
+
+            // funkcja wykonywana na bieżąco przy wpisywaniu danych (lub strzałkowa, bez bind-a)
+
+            handleChange = (event) => {
+                this.setState({ data: event.target.value });
+            }
+
+            //funkcja wykonywana przy wysłaniu formularza (lub strzałkowa, bez bind-a)
+
+            handleSubmit = (event) => {
+                this.setState({
+                    data: "",
+                    status: "wysłane"
+                })
+                //blokada przed wysłaniem formularza
+                event.preventDefault();
+            }
+
+            render() {
+                return (
+                    <form onSubmit={this.handleSubmit} >
+                        <input type="text" value={this.state.data} onChange={this.handleChange} />
+                        <input type="submit" value="send" />
+                        <div>status: {this.state.status}</div>
+                        <div>data: {this.state.data}</div>
+                    </form>
+                );
+            }
+        }
+
+        ReactDOM.render(
+            <MyForm />,
+            document.getElementById('main')
+        );
+    </script>
+</body>
+
+</html>

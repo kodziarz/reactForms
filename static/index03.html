@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        .klasa {
+            color: red
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main"></div>
+    <script type="text/babel">
+
+        class MyForm extends React.Component {
+
+            constructor(props) {
+                super(props);
+                this.state = {
+                    array: [],
+                    sum: 0
+                }
+            }
+
+            componentDidMount = async () => {
+                this.setState({ array: await (await fetch("/data.json")).json() })
+            }
+
+            // funkcja wykonywana na bieżąco przy wpisywaniu danych (lub strzałkowa, bez bind-a)
+
+            // handleChange = (event) => {
+            //     this.setState({ data: event.target.value });
+            // }
+
+            //funkcja wykonywana przy wysłaniu formularza (lub strzałkowa, bez bind-a)
+
+            handleSubmit = (event) => {
+                this.setState({
+                    data: "",
+                    status: "wysłane"
+                })
+                //blokada przed wysłaniem formularza
+                event.preventDefault();
+            }
+
+            onCheckboxChange = (value) => {
+                // console.log("string: ", string);
+                // let array = this.state.sent
+                // array.push(string)
+                // console.log("this.state.sent: ", this.state.sent);
+                this.setState({ sum: this.state.sum + value })
+            }
+
+            render() {
+                return (
+                    <form>
+                        {this.state.array.map((e, i) => { return <MyCheckbox value={e.value} checked={e.checked} onChange={this.onCheckboxChange} key={i}></MyCheckbox> })}
+                        <div>suma: {this.state.sum}</div>
+                    </form>
+                );
+            }
+
+        }
+
+        class MyCheckbox extends React.Component {
+
+            constructor(props) {
+                super(props);
+                this.state = {
+                    checked: this.props.checked,
+                }
+            }
+
+            // funkcja wykonywana na bieżąco przy wpisywaniu danych (lub strzałkowa, bez bind-a)
+
+            handleChange = () => {
+                if (this.state.checked)
+                    this.props.onChange(-this.props.value)
+                else this.props.onChange(this.props.value)
+
+
+                this.setState({ checked: !this.state.checked });
+                // if (this.props.onHandleSelect)
+                //     this.props.onHandleSelect(event.target.value)
+            }
+
+            //funkcja wykonywana przy wysłaniu formularza (lub strzałkowa, bez bind-a)
+
+            // handleSubmit = (event) => {
+            //     this.setState({
+            //         data: "",
+            //         status: "wysłane"
+            //     })
+            //     //blokada przed wysłaniem formularza
+            //     event.preventDefault();
+            // }
+
+            render() {
+                return (
+                    <div>
+                        <input type="checkbox" checked={this.state.checked} onChange={this.handleChange} />
+                        <div style={{ display: "inline-block" }}>{this.props.value} $</div>
+                        <div style={{ display: "inline-block", paddingRight: 0 }}>MyCheckbox</div>
+                    </div>
+                );
+            }
+        }
+
+        ReactDOM.render(
+            <MyForm />,
+            document.getElementById('main')
+        );
+    </script>
+</body>
+
+</html>
